@@ -7,6 +7,7 @@
 
 import math
 from typing import Dict, List
+
 from lecture3.sort import check_if_sorted
 
 
