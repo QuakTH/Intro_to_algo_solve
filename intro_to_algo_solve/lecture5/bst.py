@@ -11,13 +11,15 @@ from typing import List, Optional
 class Node:
     """Node of the BST."""
 
-    def __init__(self, key: int, parent: Optional["Node"] = None) -> None:
+    def __init__(self, key: int, bst: "BST", parent: Optional["Node"] = None) -> None:
         """Constructor for each Node instance.
 
         :param key: Value of the node.
+        :param bst: BST containing the Node.
         :param parent: Parent Node.
         """
         self.key = key
+        self.bst = bst
         self.parent = parent
         self.left = None
         self.right = None
@@ -56,10 +58,80 @@ class Node:
     def __str__(self):
         return "\n".join(self.string_rep())
 
-    def insert(self, value: int) -> None:
-        """Insert a new value. If there is a Node with the same value, skip the insertion.
+    def find(self, value: int) -> Optional["Node"]:
+        """Find the node that contains the `value`.
+        If there is no node with the `value`, returns None.
+
+        :param value: Value to find.
+        :return: A BST node. If exists.
+        """
+        if self.key == value:
+            return self
+
+        if self.key > value and self.left:
+            return self.left.find(value)
+
+        if self.key < value and self.right:
+            return self.right.find(value)
+
+        return None
+
+    def find_min(self) -> "Node":
+        """Find the BST node containing the minimum value.
+        Which root node is the node that calls this method.
+
+        :return: Node containing the minimum value.
+        """
+        current = self
+        while current.left:
+            current = current.left
+        return current
+
+    def find_max(self) -> "Node":
+        """Find the BST node containing the maximum value.
+        Which root node is the node that calls this method.
+
+        :return: Node containing the maximum value.
+        """
+        current = self
+        while current.right:
+            current = current.right
+        return current
+
+    def next_larger(self) -> Optional["Node"]:
+        """Find the node which have the next large value if exists.
+
+        :return: Node containing the next large value than
+                 the node that calls this method, if exists.
+        """
+        if self.right:
+            return self.right.find_min()
+
+        current = self
+        while self.parent and self.parent.right is current:
+            current = self.parent
+        return current.parent
+
+    def next_smaller(self) -> Optional["Node"]:
+        """Find the node which have the next small value if exists.
+
+        :return: Node containing the next small value than
+                 the node that calls this method, if exists.
+        """
+        if self.left:
+            return self.left.find_max()
+
+        current = self
+        while self.parent and self.parent.left is current:
+            current = self.parent
+        return current.parent
+
+    def insert(self, value: int, bst: "BST") -> None:
+        """Insert a new value. If there is a Node with the same value,
+        skip the insertion.
 
         :param value: Value to insert.
+        :param bst: BST containing the Node.
         """
         key = self.key
         left_node = self.left
@@ -70,14 +142,52 @@ class Node:
 
         if key > value:
             if left_node:
-                left_node.insert(value)
+                left_node.insert(value, bst)
             else:
-                self.left = Node(value, self)
+                self.left = Node(value, bst, self)
         else:
             if right_node:
-                right_node.insert(value)
+                right_node.insert(value, bst)
             else:
-                self.right = Node(value, self)
+                self.right = Node(value, bst, self)
+
+    def delete(self) -> None:
+        """Delete the current node which calls this method."""
+        if not self.left and not self.right:
+            if not self.parent:
+                self.bst.root = None
+            elif self.parent.left is self:
+                self.parent.left = None
+            elif self.parent.right is self:
+                self.parent.right = None
+            self.parent = None
+            self.bst = None
+        elif self.left and not self.right:
+            if not self.parent:
+                self.bst.root = self.left
+            elif self.parent.left is self:
+                self.parent.left = self.left
+            elif self.parent.right is self:
+                self.parent.right = self.left
+            self.left.parent = self.parent
+            self.parent = None
+            self.left = None
+            self.bst = None
+        elif self.right and not self.left:
+            if not self.parent:
+                self.bst.root = self.right
+            elif self.parent.left is self:
+                self.parent.left = self.right
+            elif self.parent.right is self:
+                self.parent.right = self.right
+            self.right.parent = self.parent
+            self.parent = None
+            self.right = None
+            self.bst = None
+        else:
+            next_large = self.next_larger()
+            self.key, next_large.key = next_large.key, self.key
+            next_large.delete()
 
 
 class BST:
@@ -115,9 +225,38 @@ class BST:
         :param value: Value to insert.
         """
         if self.root is None:
-            self.root = Node(value)
+            self.root = Node(value, self)
         else:
-            self.root.insert(value)
+            self.root.insert(value, self)
+
+    def find(self, value: int) -> Optional[Node]:
+        """Find a node containing the `value`
+
+        :param value: Value to find.
+        :return: A BST node. If exists.
+        """
+        if self.root:
+            return self.root.find(value)
+
+        return None
+
+    def find_min(self) -> Optional[Node]:
+        """Find the BST node containing the minimum value of the BST.
+
+        :return: Node containing the minimum value.
+        """
+        if self.root:
+            return self.root.find_min()
+        return None
+
+    def find_max(self) -> Optional[Node]:
+        """Find the BST node containing the maximum value of the BST.
+
+        :return: Node containing the maximum value.
+        """
+        if self.root:
+            return self.root.find_max()
+        return None
 
     def __str__(self) -> str:
         if self.root:
