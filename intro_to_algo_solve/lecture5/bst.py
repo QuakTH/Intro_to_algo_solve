@@ -41,8 +41,19 @@ class Node:
             )
         )
 
+        total_len = (
+            len(short[-1])
+            if short
+            else max(
+                map(
+                    lambda x: len(str(x)),
+                    (self.bst.find_min().key, self.bst.find_max().key),
+                )
+            )
+        )
+
         for idx in range(len(short), len(long)):
-            short.append(" " * len(long[idx]))
+            short.append(" " * total_len)
 
         string_rep = []
         for left_str, right_str in zip(left_string_rep, right_string_rep):
