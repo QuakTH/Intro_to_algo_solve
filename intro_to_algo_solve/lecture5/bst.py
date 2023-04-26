@@ -137,68 +137,62 @@ class Node:
             current = self.parent
         return current.parent
 
-    def insert(self, value: int, bst: "BST") -> None:
+    def insert(self, value: int, bst: "BST") -> "Node":
         """Insert a new value. If there is a Node with the same value,
         skip the insertion.
 
         :param value: Value to insert.
         :param bst: BST containing the Node.
+        :return: Inserted node.
         """
         key = self.key
         left_node = self.left
         right_node = self.right
 
         if key == value:
-            return
+            return self
 
         if key > value:
             if left_node:
-                left_node.insert(value, bst)
-            else:
-                self.left = Node(value, bst, self)
-        else:
-            if right_node:
-                right_node.insert(value, bst)
-            else:
-                self.right = Node(value, bst, self)
+                return left_node.insert(value, bst)
+            self.left = Node(value, bst, self)
+            return self.left
 
-    def delete(self) -> None:
-        """Delete the current node which calls this method."""
-        if not self.left and not self.right:
-            if not self.parent:
-                self.bst.root = None
-            elif self.parent.left is self:
-                self.parent.left = None
-            elif self.parent.right is self:
-                self.parent.right = None
-            self.parent = None
+        if right_node:
+            return right_node.insert(value, bst)
+        self.right = Node(value, bst, self)
+        return self.right
+
+    def delete(self) -> "Node":
+        """Delete the current node which calls this method.
+        And return the Deleted Node.
+
+        :return: The deleted node.
+        """
+        if not self.left or not self.right:
+            if self.parent:
+                if self is self.parent.left:
+                    self.parent.left = self.left or self.right
+                    if self.parent.left:
+                        self.parent.left.parent = self.parent
+                else:
+                    self.parent.right = self.left or self.right
+                    if self.parent.right:
+                        self.parent.right.parent = self.parent
+            else:
+                self.bst.root=self.left or self.right
+
+                if self.left:
+                    self.left.parent = self.parent
+                if self.right:
+                    self.right.parent = self.parent
+
             self.bst = None
-        elif self.left and not self.right:
-            if not self.parent:
-                self.bst.root = self.left
-            elif self.parent.left is self:
-                self.parent.left = self.left
-            elif self.parent.right is self:
-                self.parent.right = self.left
-            self.left.parent = self.parent
-            self.parent = None
-            self.left = None
-            self.bst = None
-        elif self.right and not self.left:
-            if not self.parent:
-                self.bst.root = self.right
-            elif self.parent.left is self:
-                self.parent.left = self.right
-            elif self.parent.right is self:
-                self.parent.right = self.right
-            self.right.parent = self.parent
-            self.parent = None
-            self.right = None
-            self.bst = None
-        else:
-            next_large = self.next_larger()
-            self.key, next_large.key = next_large.key, self.key
-            next_large.delete()
+            return self
+
+        next_large = self.next_larger()
+        self.key, next_large.key = next_large.key, self.key
+        return next_large.delete()
 
 
 class BST:
@@ -230,15 +224,16 @@ class BST:
         if node.right is not None:
             self.check_ri(node.right)
 
-    def insert(self, value: int) -> None:
+    def insert(self, value: int) -> Node:
         """Insert a new value to the BST.
 
         :param value: Value to insert.
+        :return: Inserted node.
         """
         if self.root is None:
             self.root = Node(value, self)
-        else:
-            self.root.insert(value, self)
+            return self.root
+        return self.root.insert(value, self)
 
     def find(self, value: int) -> Optional[Node]:
         """Find a node containing the `value`
