@@ -155,12 +155,12 @@ class Node:
         if key > value:
             if left_node:
                 return left_node.insert(value, bst)
-            self.left = Node(value, bst, self)
+            self.left = self.__class__(value, bst, self)
             return self.left
 
         if right_node:
             return right_node.insert(value, bst)
-        self.right = Node(value, bst, self)
+        self.right = self.__class__(value, bst, self)
         return self.right
 
     def delete(self) -> "Node":
