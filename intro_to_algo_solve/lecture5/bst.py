@@ -19,7 +19,7 @@ class Node:
         :param parent: Parent Node.
         """
         self.key = key
-        self.bst = bst
+        self.tree = bst
         self.parent = parent
         self.left = None
         self.right = None
@@ -47,12 +47,12 @@ class Node:
             else max(
                 map(
                     lambda x: len(str(x)),
-                    (self.bst.find_min().key, self.bst.find_max().key),
+                    (self.tree.find_min().key, self.tree.find_max().key),
                 )
             )
         )
 
-        for idx in range(len(short), len(long)):
+        for _ in range(len(short), len(long)):
             short.append(" " * total_len)
 
         string_rep = []
@@ -180,14 +180,13 @@ class Node:
                     if self.parent.right:
                         self.parent.right.parent = self.parent
             else:
-                self.bst.root=self.left or self.right
+                self.tree.root=self.left or self.right
 
                 if self.left:
                     self.left.parent = self.parent
                 if self.right:
                     self.right.parent = self.parent
 
-            self.bst = None
             return self
 
         next_large = self.next_larger()
