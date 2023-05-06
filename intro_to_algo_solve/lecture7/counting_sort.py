@@ -39,8 +39,15 @@ class CountingSort:
         """
         return [(node.key, node.value) for node in self.nodes]
 
+    def reset_buckets(self) -> None:
+        """Reset `bucket` and `cum_bucket` to 0 filled arrays."""
+        for idx in range(self.max_key + 1):
+            self.bucket[idx] = 0
+            self.cum_bucket[idx] = 0
+
     def sort(self) -> None:
         """Do a counting sort on `self.nodes`."""
+        self.reset_buckets()
         for node in self.nodes:
             self.bucket[node.key] += 1
 
