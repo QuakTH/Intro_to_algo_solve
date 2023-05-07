@@ -5,3 +5,5 @@ A repository containg codes of algorthims introduced in <https://ocw.mit.edu/cou
 All codes were made by myself by referencing the lecture, lecture notes, lecture codes
 
 Use the `.venv` environment made only for this project
+
+Before using the codes in the repository make sure you activate the virtual environment and run `pip install /path/to/this/repo`
