@@ -39,11 +39,11 @@ class HashTable(hash_table.HashTable):
         super().__init__(2)
         self.big_prime_num2 = generate_large_prime()
         self.inserted_element = 0  # keep track of the current inserted element
-        self.a2, self.b2 = (random.randrange(0, self.big_prime_num) for _ in range(2))
+        self.a2, self.b2 = (random.randrange(0, self.big_prime_num2) for _ in range(2))
 
         while self.a2 == 0 and self.b2 == 0:
             self.a2, self.b2 = (
-                random.randrange(0, self.big_prime_num) for _ in range(2)
+                random.randrange(0, self.big_prime_num2) for _ in range(2)
             )
 
         assert (
@@ -59,8 +59,14 @@ class HashTable(hash_table.HashTable):
         :return: A hashed key.
         """
         hashed_key = hash(key)
-        h1 = (self.a * hashed_key + self.b) % self.big_prime_num
-        h2 = (self.a2 * hashed_key + self.b2) % self.big_prime_num2
+        h1 = ((self.a * hashed_key + self.b) % self.big_prime_num) % self.table_length
+        h2 = (
+            (self.a2 * hashed_key + self.b2) % self.big_prime_num2
+        ) % self.table_length
+
+        # if h2 is zero, meaning if h2 is a multiple of table length
+        # reset h2 to 1
+        h2 = 1 if h2 % 2 == 0 else h2
 
         return (h1 + multiplier * h2) % self.table_length
 
@@ -166,7 +172,7 @@ class HashTable(hash_table.HashTable):
         search_result.deleted = True
         self.inserted_element -= 1
 
-        if self.inserted_element <= self.table_length / 4:
+        if self.inserted_element <= self.table_length / 4 and self.table_length > 2:
             self.create_new_table(True)
 
     def print_hash_table(self) -> None:
@@ -174,6 +180,10 @@ class HashTable(hash_table.HashTable):
         [index] -> (key, value)
         """
         for idx, element in enumerate(self.table):
-            item_string = f"({element.key}, {element.value})" if element else "Empty"
+            item_string = (
+                f"({element.key}, {element.value})"
+                if (element and not element.deleted)
+                else "Empty"
+            )
 
             print(f"[{idx}] -> {item_string}")
