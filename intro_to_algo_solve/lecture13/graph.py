@@ -5,7 +5,7 @@ import networkx as nx
 
 
 class Graph:
-    """A class containing information of the vertices and edges of a undirected graph."""
+    """A class containing information of the vertices and edges of a graph."""
 
     def __init__(self, adjacency_info: Dict[Any, List[Any]]) -> None:
         """Constructor for the Graph instance.
