@@ -59,7 +59,6 @@ class Graph:
                 edges.remove(tuple(reversed(edge)))
             edges = undirected_edges
 
-        print(edges)
         graph.add_edges_from(edges)
 
         if self.is_directed:
