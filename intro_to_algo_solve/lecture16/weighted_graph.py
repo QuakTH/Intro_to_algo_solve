@@ -71,7 +71,17 @@ class WeightedGraph:
             graph.add_edge(*edge, weight=weight)
 
         positions = nx.spring_layout(graph)
+        edge_labels = nx.get_edge_attributes(graph, "weight")
         if self.is_directed:
+            bidir_edges = []
+            oneway_edges = []
+
+            for edge in graph.edges:
+                if reversed(edge) in graph.edges:
+                    bidir_edges.append(edge)
+                else:
+                    oneway_edges.append(edge)
+
             nx.draw(
                 graph,
                 positions,
@@ -80,6 +90,18 @@ class WeightedGraph:
                 arrows=True,
                 arrowstyle="->",
                 arrowsize=15,
+                edgelist=oneway_edges,
+            )
+            nx.draw(
+                graph,
+                positions,
+                with_labels=True,
+                font_weight="bold",
+                arrows=True,
+                arrowstyle="->",
+                arrowsize=15,
+                edgelist=bidir_edges,
+                connectionstyle="arc3, rad = 0.2",
             )
         else:
             nx.draw(
@@ -88,6 +110,5 @@ class WeightedGraph:
                 with_labels=True,
                 font_weight="bold",
             )
-        edge_labels = nx.get_edge_attributes(graph, "weight")
         nx.draw_networkx_edge_labels(graph, positions, edge_labels=edge_labels)
         plt.show()
