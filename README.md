@@ -10,4 +10,4 @@ Before using the codes in the repository make sure you run `pip install /path/to
 
 ## TODOs
 
-- [] Change graph visualization method
+- [ ] Change graph visualization method
