@@ -7,3 +7,7 @@ All codes were made by myself by referencing the lecture, lecture notes, lecture
 Run `pip install -r requirements.txt` to install all the packages used for this project.
 
 Before using the codes in the repository make sure you run `pip install /path/to/this/repo`
+
+## TODOs
+
+- [] Change graph visualization method
