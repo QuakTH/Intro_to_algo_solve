@@ -2,11 +2,11 @@ import math
 from typing import Any, Dict, Optional, Tuple, Union
 
 from intro_to_algo_solve.lecture16.dijkstra import relax
-from intro_to_algo_solve.lecture16.weighted_graph import WeightedGraph
+from intro_to_algo_solve.data_structures.graph import Graph
 
 
 def do_bellman_ford(
-    graph: WeightedGraph, start_node: Any
+    graph: Graph, start_node: Any
 ) -> Tuple[Dict[Any, Union[int, float]], Dict[Any, Optional[Any]]]:
     assert start_node in graph.vertices, "The start node is not in the graph."
 

@@ -1,6 +1,6 @@
 from typing import Any, Optional
 
-from intro_to_algo_solve.lecture13.graph import Graph
+from intro_to_algo_solve.data_structures.graph import Graph
 
 
 class DFSInfo:
@@ -37,8 +37,8 @@ def dfs_step_in(
     if before_vertex:
         dfs_info.edge_types[(before_vertex, current_vertex)] = "Tree"
 
-    if current_vertex in graph.adjacency_info:
-        for neighbor in graph.adjacency_info[current_vertex]:
+    if current_vertex in graph.vertices:
+        for neighbor in graph.neighbors[current_vertex]:
             if neighbor not in dfs_info.before_node:
                 dfs_step_in(graph, neighbor, dfs_info, current_vertex)
             elif neighbor not in dfs_info.end_steps:
@@ -62,7 +62,7 @@ def depth_first_search(graph: Graph) -> DFSInfo:
     """
     dfs_info = DFSInfo()
 
-    for vertex in graph.adjacency_info:
+    for vertex in graph.vertices:
         if vertex not in dfs_info.before_node:
             dfs_step_in(graph, vertex, dfs_info)
 

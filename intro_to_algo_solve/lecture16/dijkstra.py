@@ -4,7 +4,7 @@
 import math
 from typing import Any, Dict, Optional, Set, Tuple, Union
 
-from intro_to_algo_solve.lecture16.weighted_graph import WeightedGraph
+from intro_to_algo_solve.data_structures.graph import Graph
 
 
 def relax(
@@ -60,7 +60,7 @@ def get_from_node(
 
 
 def do_dijkstra(
-    graph: WeightedGraph, start_node: Any
+    graph: Graph, start_node: Any
 ) -> Tuple[Dict[Any, Union[int, float]], Dict[Any, Optional[Any]]]:
     """Do a Dijkstra path finding on the weighted graph `graph`.
     Which start node is the `start_node`.
@@ -85,7 +85,7 @@ def do_dijkstra(
 
     while vertices_not_done:
         from_node = get_from_node(min_weight_infos, vertices_done)
-        for neighbor in graph.adjacency_infos[from_node]:
+        for neighbor in graph.neighbors[from_node]:
             relax(
                 from_node,
                 neighbor,

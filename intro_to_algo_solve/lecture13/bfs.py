@@ -1,5 +1,5 @@
 from typing import Any, Dict, Tuple
-from intro_to_algo_solve.lecture13.graph import Graph
+from intro_to_algo_solve.data_structures.graph import Graph
 
 
 def breadth_first_search(
@@ -15,8 +15,8 @@ def breadth_first_search(
              and the second element is the dictionary of before node.
     """
     assert (
-        start_node in graph.adjacency_info
-    ), "Start node not in graph's adjacency information."
+        start_node in graph.vertices
+    ), "Start node not in graph's vertices."
 
     shortest_paths = {start_node: 0}
     before_node = {start_node: None}
@@ -25,7 +25,7 @@ def breadth_first_search(
     while frontier:
         next_frontier = []
         for node in frontier:
-            for neighbor in graph.adjacency_info[node]:
+            for neighbor in graph.neighbors[node]:
                 if neighbor not in shortest_paths:
                     shortest_paths[neighbor] = shortest_paths[node] + 1
                     before_node[neighbor] = node
