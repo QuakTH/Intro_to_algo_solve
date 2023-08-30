@@ -14,7 +14,7 @@ class DFSInfo:
         self.edge_types = {}
         self.order = []
         self.topological_sorted = None
-        self.acyclic = False
+        self.acyclic = True
         self.step = 1
 
 
@@ -69,10 +69,10 @@ def depth_first_search(graph: Graph) -> DFSInfo:
     # Do a topological sort if the graph is not acyclic
     for edge_type in dfs_info.edge_types.values():
         if edge_type == "Backward":
-            dfs_info.acyclic = True
+            dfs_info.acyclic = False
             break
 
-    if not dfs_info.acyclic:
+    if dfs_info.acyclic:
         dfs_info.topological_sorted = dfs_info.order[::-1]
 
     return dfs_info
