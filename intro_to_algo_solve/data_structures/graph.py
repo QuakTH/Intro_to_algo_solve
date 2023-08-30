@@ -30,7 +30,7 @@ class Graph:
 
         :param is_directed:Whether the graph is a directed graph, defaults to False.
         """
-        self.vertices = list(adjacency_info.keys())
+        self.vertices = list(adjacency_info)
         self.is_directed = is_directed
 
         self.neighbors = {}
@@ -102,6 +102,25 @@ class Graph:
 
                 edges.remove(current)
                 edges.remove(reversed)
+
+    def inbound_vertices(self, vertex: Any) -> List[Any]:
+        """Return list of vertices which points to the `vertex`.
+        If the graph is not a directed graph. the neighbors will be returned.
+
+        :param vertex: Vertex to find the inbound vertices.
+        :return: List of inbound vertices.
+        """
+        assert vertex in self.vertices, "The vertex is not in the graph's vertices."
+
+        if not self.is_directed:
+            return self.neighbors[vertex]
+
+        inbound_vertices = []
+        for v, n in self.neighbors.items():
+            if vertex in n:
+                inbound_vertices.append(v)
+
+        return inbound_vertices
 
     def visualize(self) -> None:
         """Visualize the graph using the networkx and matplotlib library."""
